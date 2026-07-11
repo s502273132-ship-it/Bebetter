@@ -132,8 +132,8 @@
   <details class="tset" id="adminBox">
     <summary>老師後台：學員 / 天型 / 目標管理（學員請略過）</summary>
     <div class="admin-note">
-      這裡可以新增學員、新增天型、改份量目標。改好後按 <b>產生設定碼並複製</b> → 貼回 GitHub 的 index.html 存檔，就永久生效、學員也看得到。
-      沒貼回 GitHub 的話，改動只存在你這台手機。
+      這裡可以新增學員、新增天型、改份量目標。改好後按 <b>產生設定碼並複製</b> → 打開 <b>data.js</b> 全選取代 → Commit，就永久生效、學員也看得到。
+      沒存回 data.js 的話，改動只存在你這台手機。
     </div>
     <div class="admin-actions">
       <button class="btn ghost" id="addStudent">＋ 學員</button>
@@ -149,13 +149,13 @@
     </div>
     <textarea class="codebox" id="codeOut" readonly placeholder="按上面的「產生設定碼並複製」，這裡會出現一行設定碼"></textarea>
     <div class="steps">
-      <b>貼回 GitHub 存檔（永久生效）：</b><br>
-      ① 進倉庫點 <b>index.html</b> → 右上鉛筆 ✏️<br>
-      ② 找到這一行：<b>const SAVED_STUDENTS =</b> …（在最上面）<br>
-      ③ 把「整行」換成剛剛複製的設定碼 → <b>Commit changes</b><br>
-      ④ 約 1 分鐘後重新整理網頁即生效
+      <b>存回 GitHub（永久生效，很安全）：</b><br>
+      ① 開 <b>data.js</b> 編輯頁（見下方連結）<br>
+      ② <b>全選 Ctrl+A → 刪光 → 貼上</b>剛複製的設定碼<br>
+      ③ 按 <b>Commit changes</b> → 約 1 分鐘後重新整理即生效<br>
+      （data.js 裡只有這串資料，放心全選取代不會弄壞網頁）
     </div>
-    <div class="hint">小提醒：改完記得一定要「產生設定碼＋貼回 GitHub」，不然重新整理就會回到舊資料。</div>
+    <div class="hint">data.js 編輯頁：github.com/s502273132-ship-it/Bebetter/edit/main/data.js　｜　改完務必產生設定碼＋貼回 data.js，否則只存在本機。</div>
   </details>
 
   <div class="section-label">整天貼上（一行一餐，自動拆餐加總）</div>
@@ -179,30 +179,11 @@
 </div>
 <div class="toast" id="toast">已複製</div>
 
+<!-- 學員份量資料，獨立成 data.js；要改份量／加學生時只需編輯 data.js -->
+<script src="data.js"></script>
 <script>
-/* ============================================================
-   後台資料：貼上「產生的設定碼」時，替換下面「整行」即可。
-   每位學員底下可有多個天型；睡眠、排便可填範圍（例 6-8、0-2）。
-   ============================================================ */
-const SAVED_STUDENTS = {
-  "凱博": {
-    "平常日": {dairy:1, veg:4, fruit:1, grain:8, lowfat:7, medfat:5, fat:2, protein:1, water:3200, steps:8000, sleepLabel:"6-8", poopLabel:"0-2"},
-    "重訓日": {dairy:1, veg:4, fruit:1, grain:8, lowfat:7, medfat:5, fat:2, protein:1, water:3200, steps:8000, sleepLabel:"6-8", poopLabel:"0-2"}
-  },
-  "詩涵": {
-    "平常日": {dairy:0, veg:4, fruit:1, grain:5, lowfat:6, medfat:3, fat:2, protein:1, water:2500, steps:6000, sleepLabel:"7-8", poopLabel:"1"},
-    "重訓日": {dairy:0, veg:4, fruit:2, grain:6, lowfat:6, medfat:3, fat:2, protein:1, water:2800, steps:6000, sleepLabel:"7-8", poopLabel:"1"}
-  },
-  "凱儀": {
-    "平常日": {dairy:0, veg:4, fruit:2, grain:6, lowfat:7, medfat:4, fat:2, protein:1, water:2500, steps:8000, sleepLabel:"7-8", poopLabel:"1"},
-    "重訓日": {dairy:1, veg:4, fruit:2, grain:8, lowfat:7, medfat:5, fat:2, protein:1, water:2500, steps:8000, sleepLabel:"7-8", poopLabel:"1"},
-    "減量日": {dairy:0, veg:4, fruit:0, grain:4, lowfat:4, medfat:3, fat:0, protein:1, water:2500, steps:8000, sleepLabel:"7-8", poopLabel:"1"}
-  },
-  "Vic": {
-    "平常日": {dairy:0, veg:4, fruit:2, grain:6, lowfat:6, medfat:3, fat:2, protein:1, water:2500, steps:8000, sleepLabel:"7-8", poopLabel:"1"},
-    "重訓日": {dairy:0, veg:4, fruit:2, grain:6, lowfat:6, medfat:3, fat:2, protein:1, water:2500, steps:8000, sleepLabel:"7-8", poopLabel:"1"}
-  }
-};
+/* 若 data.js 未載入，用一組空預設避免報錯 */
+function _fallbackData(){return {"通用":{"平常日":blankTargets(),"重訓日":blankTargets()}};}
 
 /* ---------- 基本設定 ---------- */
 const FOODCATS=[
@@ -237,7 +218,8 @@ function normalize(src){
   });
   return out;
 }
-let STUDENTS = normalize(SAVED_STUDENTS);
+const SRC = (typeof SAVED_STUDENTS!=='undefined' && SAVED_STUDENTS && Object.keys(SAVED_STUDENTS).length) ? SAVED_STUDENTS : _fallbackData();
+let STUDENTS = normalize(SRC);
 
 /* ---------- 狀態 ---------- */
 let currentStudent = Object.keys(STUDENTS)[0];
@@ -454,9 +436,9 @@ function delStudent(){
   fillStudentOptions();fillDayOptions();loadProfile();toast('已刪除學員');
 }
 function genCode(){
-  const code='const SAVED_STUDENTS = '+JSON.stringify(STUDENTS)+';';
+  const code='var SAVED_STUDENTS = '+JSON.stringify(STUDENTS)+';';
   document.getElementById('codeOut').value=code;
-  copyText(code,'設定碼已複製，貼回 GitHub 即永久生效');
+  copyText(code,'已複製！開 data.js →全選取代→Commit 即永久生效');
 }
 
 /* ---------- 控制項 ---------- */
