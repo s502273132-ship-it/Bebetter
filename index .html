@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BeBetter · 代換份加總表</title>
+<style>
+  :root{
+    --paper:#FAF6EC; --card:#FFFDF8; --ink:#2E2A22; --muted:#8A8368;
+    --olive:#6E7A4F; --olive-deep:#55603C; --clay:#C1803A; --clay-soft:#F0E2CB;
+    --line:#E7DECB; --green:#5E7A3C; --green-bg:#EEF2E1;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif;
+    font-size:16px;line-height:1.5;padding:0 0 40px;
+  }
+  .wrap{max-width:560px;margin:0 auto;padding:18px 16px}
+  header.top{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:4px}
+  header.top h1{
+    font-family:"Songti TC","Noto Serif TC",serif;font-weight:700;
+    font-size:22px;margin:0;letter-spacing:.5px;color:var(--olive-deep);
+  }
+  header.top .sub{font-size:12px;color:var(--muted)}
+  .selrow{display:grid;grid-template-columns:1.2fr 1fr;gap:8px;margin:12px 0 6px}
+  .selrow .field{display:flex;flex-direction:column;gap:3px}
+  .selrow .field label{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.5px;padding-left:2px}
+  .selrow select{
+    font-family:inherit;font-size:16px;padding:10px 12px;border:1px solid var(--line);
+    border-radius:10px;background:var(--card);color:var(--ink);font-weight:700;
+    -webkit-appearance:none;appearance:none;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path d='M2 4l4 4 4-4' stroke='%2355603C' stroke-width='1.6' fill='none' stroke-linecap='round'/></svg>");
+    background-repeat:no-repeat;background-position:right 12px center;padding-right:30px;
+  }
+  .daterow{display:flex;gap:8px;align-items:center;margin:8px 0 14px}
+  .daterow input{
+    flex:1;font-size:15px;padding:9px 12px;border:1px solid var(--line);
+    border-radius:10px;background:var(--card);color:var(--ink);font-family:inherit;
+  }
+  .btn{
+    font-family:inherit;font-size:14px;border:1px solid var(--line);background:var(--card);
+    color:var(--olive-deep);padding:9px 12px;border-radius:10px;cursor:pointer;font-weight:600;
+  }
+  .btn:active{transform:translateY(1px)}
+  .btn.solid{background:var(--olive);color:#fff;border-color:var(--olive)}
+  .btn.ghost{background:transparent}
+  .section-label{font-size:12px;letter-spacing:1px;color:var(--muted);font-weight:700;margin:18px 2px 8px}
+  .pastecard{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px}
+  .pastecard textarea{width:100%;min-height:118px;resize:vertical;border:1px dashed var(--line);border-radius:10px;background:#FCFAF2;color:var(--ink);font-family:inherit;font-size:15px;line-height:1.7;padding:10px 12px}
+  .pastecard textarea::placeholder{color:#B7B197}
+  .pastecard textarea:focus{outline:none;border-color:var(--olive)}
+  .pastecard .btn.solid{width:100%;margin-top:10px}
+  .meal{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 12px 6px;margin-bottom:12px;box-shadow:0 1px 0 rgba(85,96,60,.03)}
+  .meal .mhead{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+  .meal .mname{flex:1;font-size:16px;font-weight:700;color:var(--olive-deep);border:none;background:transparent;font-family:inherit;padding:2px 0;border-bottom:1.5px dashed var(--line)}
+  .meal .mname:focus{outline:none;border-bottom-color:var(--olive)}
+  .del{border:none;background:transparent;color:var(--muted);font-size:18px;cursor:pointer;padding:2px 6px;line-height:1}
+  .quick{width:100%;font-size:14px;padding:7px 10px;border:1px dashed var(--line);border-radius:9px;background:#FCFAF2;color:var(--ink);font-family:inherit;margin-bottom:10px}
+  .quick::placeholder{color:#B7B197}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:7px 10px;margin-bottom:6px}
+  .cell{display:flex;align-items:center;gap:6px;justify-content:space-between}
+  .cell .lab{font-size:13px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .stp{display:flex;align-items:center;border:1px solid var(--line);border-radius:9px;overflow:hidden;background:#fff;flex:none}
+  .stp button{width:26px;height:30px;border:none;background:#F4EFE0;color:var(--olive-deep);font-size:16px;cursor:pointer;font-weight:700}
+  .stp button:active{background:var(--clay-soft)}
+  .stp input{width:38px;height:30px;border:none;text-align:center;font-size:15px;font-family:inherit;color:var(--ink);background:#fff;-moz-appearance:textfield}
+  .stp input::-webkit-outer-spin-button,.stp input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+  .stp input:focus{outline:none;background:#FCFAF2}
+  .behcard{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:6px 12px}
+  .behrow{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}
+  .behrow:last-child{border-bottom:none}
+  .behrow .bl{flex:1;font-size:14px}
+  .behrow .bl small{color:var(--muted)}
+  .behrow input{width:92px;font-size:15px;padding:7px 9px;border:1px solid var(--line);border-radius:9px;text-align:right;font-family:inherit;background:#fff;color:var(--ink)}
+  .receipt{position:sticky;bottom:0;margin-top:22px;background:var(--olive-deep);color:#F7F3E7;border-radius:16px 16px 0 0;padding:16px 16px 18px;box-shadow:0 -6px 24px rgba(46,42,34,.14)}
+  .receipt h2{font-family:"Songti TC","Noto Serif TC",serif;font-size:15px;margin:0 0 10px;font-weight:700;color:#EDE6CE;display:flex;justify-content:space-between;align-items:center}
+  .receipt .rlabel{font-weight:400;font-size:12px;opacity:.75}
+  .rline{display:flex;align-items:baseline;gap:6px;font-size:13.5px;padding:3px 0;font-variant-numeric:tabular-nums}
+  .rline .nm{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .rline .tg{opacity:.6;font-size:12px}
+  .rline .ac{font-weight:700;min-width:38px;text-align:right}
+  .rline .dl{font-size:11px;padding:1px 6px;border-radius:20px;min-width:34px;text-align:center}
+  .dl.ok{background:rgba(174,196,120,.28);color:#E7F0C9}
+  .dl.up{background:rgba(233,222,180,.22);color:#F2E9C6}
+  .dl.dn{background:rgba(224,160,90,.28);color:#F6DEBE}
+  .rsep{height:1px;background:rgba(247,243,231,.18);margin:8px 0}
+  .ract{display:flex;gap:8px;margin-top:12px}
+  .ract .btn{flex:1;background:#F7F3E7;border-color:#F7F3E7;color:var(--olive-deep)}
+  .ract .btn.sec{background:transparent;color:#F7F3E7;border-color:rgba(247,243,231,.5)}
+  .toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%) translateY(10px);background:var(--ink);color:#F7F3E7;padding:9px 16px;border-radius:20px;font-size:13px;opacity:0;transition:.25s;pointer-events:none;z-index:20;text-align:center;max-width:88%}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  details.tset{margin:6px 0 2px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:2px 12px}
+  details.tset summary{font-size:14px;color:var(--olive-deep);cursor:pointer;font-weight:700;padding:10px 2px;list-style:none}
+  details.tset summary::-webkit-details-marker{display:none}
+  details.tset summary::before{content:"🔧 "}
+  .admin-note{font-size:12px;color:var(--muted);margin:2px 2px 8px;line-height:1.6}
+  .admin-target-title{font-size:12.5px;color:var(--olive-deep);font-weight:700;margin:4px 2px 2px}
+  .tgrid{display:grid;grid-template-columns:1fr 1fr;gap:6px 10px;padding:6px 2px 10px}
+  .tgrid label{font-size:13px;display:flex;align-items:center;justify-content:space-between;gap:6px}
+  .tgrid input{width:64px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;text-align:right;font-family:inherit;font-size:14px;background:#fff}
+  .admin-actions{display:flex;flex-wrap:wrap;gap:6px;margin:4px 2px 8px}
+  .admin-actions .btn{flex:1;min-width:64px;font-size:13px;padding:8px 6px}
+  .codebox{width:100%;min-height:70px;font-size:11px;font-family:ui-monospace,Menlo,Consolas,monospace;border:1px solid var(--line);border-radius:9px;background:#FCFAF2;color:var(--ink);padding:8px;resize:vertical;margin-bottom:6px}
+  .steps{font-size:11.5px;color:var(--muted);line-height:1.7;background:#F4EFE0;border-radius:9px;padding:8px 10px;margin-bottom:8px}
+  .steps b{color:var(--olive-deep)}
+  .hint{font-size:11.5px;color:var(--muted);margin:2px 2px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1>代換份加總表</h1>
+    <span class="sub">BeBetter · 台灣食物代換</span>
+  </header>
+
+  <div class="selrow">
+    <div class="field">
+      <label>學員</label>
+      <select id="studentSel" aria-label="選擇學員"></select>
+    </div>
+    <div class="field">
+      <label>天型</label>
+      <select id="daySel" aria-label="選擇天型"></select>
+    </div>
+  </div>
+  <div class="daterow">
+    <input id="dateLabel" placeholder="日期（可留空，例：7/11）" aria-label="日期">
+    <button class="btn ghost" id="reloadProfile" title="重新載入此學員此天型的目標">↺ 還原目標</button>
+  </div>
+
+  <details class="tset" id="adminBox">
+    <summary>老師後台：學員 / 天型 / 目標管理（學員請略過）</summary>
+    <div class="admin-note">
+      這裡可以新增學員、新增天型、改份量目標。改好後按 <b>產生設定碼並複製</b> → 貼回 GitHub 的 index.html 存檔，就永久生效、學員也看得到。
+      沒貼回 GitHub 的話，改動只存在你這台手機。
+    </div>
+    <div class="admin-actions">
+      <button class="btn ghost" id="addStudent">＋ 學員</button>
+      <button class="btn ghost" id="addDay">＋ 天型</button>
+      <button class="btn ghost" id="delDay">刪天型</button>
+      <button class="btn ghost" id="delStudent">刪學員</button>
+    </div>
+    <div class="admin-target-title" id="adminWho">目前編輯：—</div>
+    <div class="tgrid" id="tgrid"></div>
+    <div class="admin-actions">
+      <button class="btn solid" id="genCode">產生設定碼並複製</button>
+      <button class="btn ghost" id="copyLink" title="複製本頁網址">複製網址</button>
+    </div>
+    <textarea class="codebox" id="codeOut" readonly placeholder="按上面的「產生設定碼並複製」，這裡會出現一行設定碼"></textarea>
+    <div class="steps">
+      <b>貼回 GitHub 存檔（永久生效）：</b><br>
+      ① 進倉庫點 <b>index.html</b> → 右上鉛筆 ✏️<br>
+      ② 找到這一行：<b>const SAVED_STUDENTS =</b> …（在最上面）<br>
+      ③ 把「整行」換成剛剛複製的設定碼 → <b>Commit changes</b><br>
+      ④ 約 1 分鐘後重新整理網頁即生效
+    </div>
+    <div class="hint">小提醒：改完記得一定要「產生設定碼＋貼回 GitHub」，不然重新整理就會回到舊資料。</div>
+  </details>
+
+  <div class="section-label">整天貼上（一行一餐，自動拆餐加總）</div>
+  <div class="pastecard">
+    <textarea id="pasteBox" placeholder="早 1中3🍠1.5🥜&#10;點心 2低1.5🥬1🥜&#10;午 4中3🍠2.5🥬&#10;水果1🍎&#10;晚 3低0.75 🍠2.2🥜"></textarea>
+    <button class="btn solid" id="importBtn">拆餐並加總</button>
+  </div>
+  <div class="section-label">各餐份數（可再手動微調）</div>
+  <div id="meals"></div>
+  <button class="btn ghost" id="addMeal" style="width:100%;margin-bottom:8px">＋ 新增餐次</button>
+  <div class="section-label">行為紀錄</div>
+  <div class="behcard" id="behcard"></div>
+  <div class="receipt">
+    <h2><span id="rTitle">紀錄</span><span class="rlabel">目標 ／ 實際</span></h2>
+    <div id="receiptLines"></div>
+    <div class="ract">
+      <button class="btn" id="copyBtn">複製給 LINE</button>
+      <button class="btn sec" id="clearBtn">清空數值</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast">已複製</div>
+
+<script>
+/* ============================================================
+   後台資料：貼上「產生的設定碼」時，替換下面「整行」即可。
+   每位學員底下可有多個天型；睡眠、排便可填範圍（例 6-8、0-2）。
+   ============================================================ */
+const SAVED_STUDENTS = {
+  "凱博": {
+    "平常日": {dairy:1, veg:4, fruit:1, grain:8, lowfat:7, medfat:5, fat:2, protein:1, water:3200, steps:8000, sleepLabel:"6-8", poopLabel:"0-2"},
+    "重訓日": {dairy:1, veg:4, fruit:1, grain:8, lowfat:7, medfat:5, fat:2, protein:1, water:3200, steps:8000, sleepLabel:"6-8", poopLabel:"0-2"}
+  },
+  "詩涵": {
+    "平常日": {dairy:0, veg:4, fruit:1, grain:5, lowfat:6, medfat:3, fat:2, protein:1, water:2500, steps:6000, sleepLabel:"7-8", poopLabel:"1"},
+    "重訓日": {dairy:0, veg:4, fruit:2, grain:6, lowfat:6, medfat:3, fat:2, protein:1, water:2800, steps:6000, sleepLabel:"7-8", poopLabel:"1"}
+  },
+  "凱儀": {
+    "平常日": {dairy:0, veg:4, fruit:2, grain:6, lowfat:7, medfat:4, fat:2, protein:1, water:2500, steps:8000, sleepLabel:"7-8", poopLabel:"1"},
+    "重訓日": {dairy:1, veg:4, fruit:2, grain:8, lowfat:7, medfat:5, fat:2, protein:1, water:2500, steps:8000, sleepLabel:"7-8", poopLabel:"1"},
+    "減量日": {dairy:0, veg:4, fruit:0, grain:4, lowfat:4, medfat:3, fat:0, protein:1, water:2500, steps:8000, sleepLabel:"7-8", poopLabel:"1"}
+  },
+  "Vic": {
+    "平常日": {dairy:0, veg:4, fruit:2, grain:6, lowfat:6, medfat:3, fat:2, protein:1, water:2500, steps:8000, sleepLabel:"7-8", poopLabel:"1"},
+    "重訓日": {dairy:0, veg:4, fruit:2, grain:6, lowfat:6, medfat:3, fat:2, protein:1, water:2500, steps:8000, sleepLabel:"7-8", poopLabel:"1"}
+  }
+};
+
+/* ---------- 基本設定 ---------- */
+const FOODCATS=[
+  {key:'dairy',  emoji:'🥛', name:'乳製品',       full:'乳製品'},
+  {key:'veg',    emoji:'🥦', name:'蔬菜類',       full:'蔬菜類'},
+  {key:'fruit',  emoji:'🍎', name:'水果類',       full:'水果類'},
+  {key:'grain',  emoji:'🍠', name:'全穀根莖類',   full:'全穀根莖類'},
+  {key:'lowfat', emoji:'🍗', name:'低脂豆魚蛋肉', full:'低脂豆魚蛋肉類'},
+  {key:'medfat', emoji:'🍖', name:'中脂豆魚蛋肉', full:'中脂豆魚蛋肉類'},
+  {key:'fat',    emoji:'🥜', name:'堅果油脂',     full:'堅果油脂類'},
+  {key:'protein',emoji:'🥛', name:'高蛋白',       full:'高蛋白'},
+];
+const BEH=[
+  {key:'water', emoji:'💧',  name:'水分', tkey:'water',     type:'num',  suffix:'ml'},
+  {key:'steps', emoji:'🚶‍➡️', name:'走路', tkey:'steps',     type:'num',  suffix:'步'},
+  {key:'sleep', emoji:'💤',  name:'睡眠', tkey:'sleepLabel',type:'text', suffix:'小時'},
+  {key:'poop',  emoji:'✨',  name:'排便', tkey:'poopLabel', type:'text', suffix:'次'},
+];
+function blankTargets(){return {dairy:0,veg:4,fruit:2,grain:6,lowfat:6,medfat:3,fat:2,protein:1,
+                                water:2500, steps:8000, sleepLabel:'7-8', poopLabel:'1'};}
+
+/* 補齊缺漏欄位、深拷貝 */
+function normalize(src){
+  const out={};const def=blankTargets();
+  Object.keys(src).forEach(stu=>{
+    out[stu]={};
+    Object.keys(src[stu]).forEach(day=>{
+      const t={...def};const s=src[stu][day]||{};
+      Object.keys(def).forEach(k=>{if(s[k]!==undefined&&s[k]!==null)t[k]=s[k];});
+      out[stu][day]=t;
+    });
+  });
+  return out;
+}
+let STUDENTS = normalize(SAVED_STUDENTS);
+
+/* ---------- 狀態 ---------- */
+let currentStudent = Object.keys(STUDENTS)[0];
+let currentDay = Object.keys(STUDENTS[currentStudent])[0];
+let targets = {...STUDENTS[currentStudent][currentDay]};
+let meals=[ mkMeal('早'), mkMeal('午'), mkMeal('晚'), mkMeal('點心') ];
+let beh={water:'',steps:'',sleep:'',poop:''};
+
+function mkMeal(name){const v={};FOODCATS.forEach(c=>v[c.key]=0);return{id:Math.random().toString(36).slice(2),name,vals:v};}
+function fmt(n){if(n===''||n==null)return'';const x=Math.round(parseFloat(n)*100)/100;if(isNaN(x))return String(n);return String(x);}
+
+/* ---------- 選單 ---------- */
+const ss=document.getElementById('studentSel');
+const ds=document.getElementById('daySel');
+function fillStudentOptions(){
+  ss.innerHTML=Object.keys(STUDENTS).map(n=>`<option value="${n}">${n}</option>`).join('');
+  ss.value=currentStudent;
+}
+function fillDayOptions(){
+  ds.innerHTML=Object.keys(STUDENTS[currentStudent]).map(d=>`<option value="${d}">${d}</option>`).join('');
+  ds.value=currentDay;
+}
+ss.addEventListener('change',e=>{
+  currentStudent=e.target.value;
+  currentDay=Object.keys(STUDENTS[currentStudent])[0];
+  fillDayOptions();loadProfile();
+});
+ds.addEventListener('change',e=>{currentDay=e.target.value;loadProfile();});
+
+function loadProfile(){
+  targets={...STUDENTS[currentStudent][currentDay]};
+  document.getElementById('adminWho').textContent='目前編輯：'+currentStudent+'　'+currentDay;
+  renderTargets();renderBeh();renderReceipt();
+}
+
+/* ---------- 縮寫解析 ---------- */
+const TOKENMAP={'全穀':'grain','水果':'fruit','堅果':'fat','低':'lowfat','中':'medfat','穀':'grain','蔬':'veg','菜':'veg','果':'fruit','油':'fat','乳':'dairy','高':'protein',
+  '🍠':'grain','🥬':'veg','🥦':'veg','🍎':'fruit','🥜':'fat','🍗':'lowfat','🍖':'medfat'};
+function parseShorthand(str){
+  const out={};const re=/(\d+(?:\.\d+)?)\s*(全穀|水果|堅果|低|中|穀|蔬|菜|果|油|乳|高|🍠|🥬|🥦|🍎|🥜|🍗|🍖)/g;
+  let m;while((m=re.exec(str))!==null){const k=TOKENMAP[m[2]];if(k)out[k]=(out[k]||0)+parseFloat(m[1]);}
+  return out;
+}
+function parseDayText(text){
+  const lines=text.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
+  return lines.map(line=>{
+    const idx=line.search(/\d/);
+    let name,rest;
+    if(idx>0){name=line.slice(0,idx).trim();rest=line.slice(idx);}
+    else if(idx===0){name='餐次';rest=line;}
+    else{name=line;rest='';}
+    const meal=mkMeal(name||'餐次');
+    const parsed=parseShorthand(rest);
+    Object.keys(parsed).forEach(k=>meal.vals[k]=parsed[k]);
+    return meal;
+  });
+}
+
+/* ---------- 後台：目標編輯 ---------- */
+function renderTargets(){
+  const g=document.getElementById('tgrid');g.innerHTML='';
+  FOODCATS.forEach(c=>{
+    g.insertAdjacentHTML('beforeend',
+      `<label>${c.emoji} ${c.name}<input type="number" step="0.5" min="0" data-tkey="${c.key}" value="${targets[c.key]}"></label>`);
+  });
+  g.insertAdjacentHTML('beforeend',`<label>💧 水分(ml)<input type="number" data-tkey="water" value="${targets.water}"></label>`);
+  g.insertAdjacentHTML('beforeend',`<label>🚶 走路(步)<input type="number" data-tkey="steps" value="${targets.steps}"></label>`);
+  g.insertAdjacentHTML('beforeend',`<label>💤 睡眠<input type="text" data-tkey="sleepLabel" value="${targets.sleepLabel}"></label>`);
+  g.insertAdjacentHTML('beforeend',`<label>✨ 排便<input type="text" data-tkey="poopLabel" value="${targets.poopLabel}"></label>`);
+  g.querySelectorAll('input').forEach(inp=>inp.addEventListener('input',e=>{
+    const k=e.target.dataset.tkey;
+    const isText=(k==='sleepLabel'||k==='poopLabel');
+    const v=isText?e.target.value:(parseFloat(e.target.value)||0);
+    targets[k]=v;
+    STUDENTS[currentStudent][currentDay][k]=v;
+    renderReceipt();
+  }));
+}
+
+/* ---------- 餐次 ---------- */
+function renderMeals(){
+  const box=document.getElementById('meals');box.innerHTML='';
+  meals.forEach((meal)=>{
+    const cells=FOODCATS.map(c=>
+      `<div class="cell"><span class="lab">${c.emoji} ${c.name}</span>
+        <span class="stp">
+          <button data-act="dec" data-m="${meal.id}" data-c="${c.key}">−</button>
+          <input type="number" step="0.5" inputmode="decimal" data-m="${meal.id}" data-c="${c.key}" value="${meal.vals[c.key]||0}">
+          <button data-act="inc" data-m="${meal.id}" data-c="${c.key}">＋</button>
+        </span></div>`).join('');
+    box.insertAdjacentHTML('beforeend',
+      `<div class="meal" data-m="${meal.id}">
+        <div class="mhead">
+          <input class="mname" data-m="${meal.id}" value="${meal.name}" aria-label="餐次名稱">
+          <button class="del" data-del="${meal.id}" title="刪除">✕</button>
+        </div>
+        <input class="quick" data-quick="${meal.id}" placeholder="快速輸入：3低1中2🍠2🥬 → Enter 帶入">
+        <div class="grid">${cells}</div>
+      </div>`);
+  });
+  bindMealEvents();
+}
+function bindMealEvents(){
+  document.querySelectorAll('.stp button').forEach(b=>b.addEventListener('click',()=>{
+    const {act,m,c}=b.dataset;const meal=meals.find(x=>x.id===m);
+    let v=meal.vals[c]||0;v=act==='inc'?v+0.5:Math.max(0,v-0.5);meal.vals[c]=Math.round(v*100)/100;
+    const inp=document.querySelector(`.stp input[data-m="${m}"][data-c="${c}"]`);inp.value=fmt(meal.vals[c])||0;renderReceipt();
+  }));
+  document.querySelectorAll('.stp input').forEach(inp=>inp.addEventListener('input',e=>{
+    const {m,c}=e.target.dataset;meals.find(x=>x.id===m).vals[c]=parseFloat(e.target.value)||0;renderReceipt();
+  }));
+  document.querySelectorAll('.mname').forEach(inp=>inp.addEventListener('input',e=>{
+    meals.find(x=>x.id===e.target.dataset.m).name=e.target.value;
+  }));
+  document.querySelectorAll('.del').forEach(b=>b.addEventListener('click',()=>{
+    if(meals.length<=1)return;meals=meals.filter(x=>x.id!==b.dataset.del);renderMeals();renderReceipt();
+  }));
+  document.querySelectorAll('.quick').forEach(inp=>{
+    const apply=()=>{const parsed=parseShorthand(inp.value);const meal=meals.find(x=>x.id===inp.dataset.quick);
+      Object.keys(parsed).forEach(k=>meal.vals[k]=parsed[k]);inp.value='';renderMeals();renderReceipt();};
+    inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();apply();}});
+    inp.addEventListener('blur',()=>{if(inp.value.trim())apply();});
+  });
+}
+
+/* ---------- 行為 ---------- */
+function targetDisplay(b){return b.type==='num'?fmt(targets[b.tkey]):targets[b.tkey];}
+function renderBeh(){
+  const box=document.getElementById('behcard');box.innerHTML='';
+  BEH.forEach(b=>{
+    const t=targetDisplay(b)+' '+(b.suffix||'');
+    box.insertAdjacentHTML('beforeend',
+      `<div class="behrow"><span class="bl">${b.emoji} ${b.name} <small>(目標 ${t.trim()})</small></span>
+        <input type="text" inputmode="decimal" data-beh="${b.key}" value="${beh[b.key]}" placeholder="—"></div>`);
+  });
+  box.querySelectorAll('input').forEach(inp=>inp.addEventListener('input',e=>{beh[e.target.dataset.beh]=e.target.value;renderReceipt();}));
+}
+
+/* ---------- 加總 + 收據 ---------- */
+function totals(){const t={};FOODCATS.forEach(c=>t[c.key]=meals.reduce((s,m)=>s+(parseFloat(m.vals[c.key])||0),0));return t;}
+function deltaChip(actual,target){
+  const d=Math.round((actual-target)*100)/100;
+  if(d===0)return`<span class="dl ok">✓</span>`;
+  if(d>0)return`<span class="dl up">+${fmt(d)}</span>`;
+  return`<span class="dl dn">−${fmt(Math.abs(d))}</span>`;
+}
+function titleText(){
+  const dt=document.getElementById('dateLabel').value.trim();
+  return currentStudent+' · '+currentDay+(dt?(' · '+dt):'');
+}
+function renderReceipt(){
+  const t=totals();const box=document.getElementById('receiptLines');box.innerHTML='';
+  document.getElementById('rTitle').textContent=titleText();
+  FOODCATS.forEach(c=>{
+    box.insertAdjacentHTML('beforeend',
+      `<div class="rline"><span class="nm">${c.emoji} ${c.full}</span>
+        <span class="tg">(${fmt(targets[c.key])}份)</span>
+        <span class="ac">${fmt(t[c.key])||0}</span>${deltaChip(t[c.key],targets[c.key])}</div>`);
+  });
+  box.insertAdjacentHTML('beforeend',`<div class="rsep"></div>`);
+  BEH.forEach(b=>{
+    const tg=targetDisplay(b)+(b.suffix||'');
+    const val=beh[b.key]===''?'—':beh[b.key];
+    box.insertAdjacentHTML('beforeend',
+      `<div class="rline"><span class="nm">${b.emoji} ${b.name}</span>
+        <span class="tg">(${tg})</span><span class="ac">${val}</span></div>`);
+  });
+}
+
+/* ---------- 複製給 LINE ---------- */
+function buildCopyText(){
+  const t=totals();const lines=[];
+  lines.push(titleText());
+  FOODCATS.forEach(c=>lines.push(`${c.emoji} ${c.full} (${fmt(targets[c.key])}份)：${fmt(t[c.key])||0}`));
+  BEH.forEach(b=>lines.push(`${b.emoji} ${b.name} (${targetDisplay(b)}${b.suffix})：${beh[b.key]||''}`));
+  return lines.join('\n');
+}
+function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),1800);}
+async function copyText(txt,okMsg){
+  try{await navigator.clipboard.writeText(txt);toast(okMsg);}
+  catch(e){const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');toast(okMsg);}catch(_){toast('請長按文字手動複製');}document.body.removeChild(ta);}
+}
+
+/* ---------- 後台：管理 ---------- */
+function addStudent(){
+  const name=(prompt('新增學員名稱：')||'').trim();
+  if(!name)return;
+  if(STUDENTS[name]){toast('已有同名學員');return;}
+  STUDENTS[name]={'平常日':blankTargets(),'重訓日':blankTargets()};
+  currentStudent=name;currentDay='平常日';
+  fillStudentOptions();fillDayOptions();loadProfile();toast('已新增學員：'+name+'（記得產生設定碼存回）');
+}
+function addDay(){
+  const name=(prompt('在「'+currentStudent+'」新增天型名稱：','減量日')||'').trim();
+  if(!name)return;
+  if(STUDENTS[currentStudent][name]){toast('此學員已有同名天型');return;}
+  STUDENTS[currentStudent][name]=blankTargets();
+  currentDay=name;
+  fillDayOptions();loadProfile();toast('已新增天型：'+name);
+}
+function delDay(){
+  if(Object.keys(STUDENTS[currentStudent]).length<=1){toast('至少要保留一個天型');return;}
+  if(!confirm('確定刪除「'+currentStudent+' · '+currentDay+'」這個天型？'))return;
+  delete STUDENTS[currentStudent][currentDay];
+  currentDay=Object.keys(STUDENTS[currentStudent])[0];
+  fillDayOptions();loadProfile();toast('已刪除天型');
+}
+function delStudent(){
+  if(Object.keys(STUDENTS).length<=1){toast('至少要保留一位學員');return;}
+  if(!confirm('確定刪除學員「'+currentStudent+'」與其所有天型？'))return;
+  delete STUDENTS[currentStudent];
+  currentStudent=Object.keys(STUDENTS)[0];
+  currentDay=Object.keys(STUDENTS[currentStudent])[0];
+  fillStudentOptions();fillDayOptions();loadProfile();toast('已刪除學員');
+}
+function genCode(){
+  const code='const SAVED_STUDENTS = '+JSON.stringify(STUDENTS)+';';
+  document.getElementById('codeOut').value=code;
+  copyText(code,'設定碼已複製，貼回 GitHub 即永久生效');
+}
+
+/* ---------- 控制項 ---------- */
+document.getElementById('importBtn').addEventListener('click',()=>{
+  const txt=document.getElementById('pasteBox').value;
+  const parsed=parseDayText(txt);
+  if(parsed.length){meals=parsed;renderMeals();renderReceipt();toast('已拆成 '+parsed.length+' 餐並加總');}
+  else{toast('沒抓到內容，檢查格式');}
+});
+document.getElementById('addMeal').addEventListener('click',()=>{meals.push(mkMeal('餐次'));renderMeals();renderReceipt();});
+document.getElementById('dateLabel').addEventListener('input',renderReceipt);
+document.getElementById('reloadProfile').addEventListener('click',()=>{loadProfile();toast('已還原「'+currentStudent+'·'+currentDay+'」的目標');});
+document.getElementById('addStudent').addEventListener('click',addStudent);
+document.getElementById('addDay').addEventListener('click',addDay);
+document.getElementById('delDay').addEventListener('click',delDay);
+document.getElementById('delStudent').addEventListener('click',delStudent);
+document.getElementById('genCode').addEventListener('click',genCode);
+document.getElementById('copyLink').addEventListener('click',()=>copyText(location.href.split('#')[0],'網址已複製'));
+document.getElementById('clearBtn').addEventListener('click',()=>{meals.forEach(m=>FOODCATS.forEach(c=>m.vals[c.key]=0));beh={water:'',steps:'',sleep:'',poop:''};renderMeals();renderBeh();renderReceipt();});
+document.getElementById('copyBtn').addEventListener('click',()=>copyText(buildCopyText(),'已複製，可貼到 LINE'));
+
+/* ---------- 初始化 ---------- */
+fillStudentOptions();fillDayOptions();
+document.getElementById('adminWho').textContent='目前編輯：'+currentStudent+'　'+currentDay;
+renderTargets();renderMeals();renderBeh();renderReceipt();
+</script>
+</body>
+</html>
