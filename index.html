@@ -23,9 +23,19 @@
     font-size:22px;margin:0;letter-spacing:.5px;color:var(--olive-deep);
   }
   header.top .sub{font-size:12px;color:var(--muted)}
-  .dayrow{display:flex;gap:8px;align-items:center;margin:10px 0 16px}
-  .dayrow input{
-    flex:1;font-size:16px;padding:9px 12px;border:1px solid var(--line);
+  .selrow{display:grid;grid-template-columns:1.2fr 1fr;gap:8px;margin:12px 0 6px}
+  .selrow .field{display:flex;flex-direction:column;gap:3px}
+  .selrow .field label{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.5px;padding-left:2px}
+  .selrow select{
+    font-family:inherit;font-size:16px;padding:10px 12px;border:1px solid var(--line);
+    border-radius:10px;background:var(--card);color:var(--ink);font-weight:700;
+    -webkit-appearance:none;appearance:none;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path d='M2 4l4 4 4-4' stroke='%2355603C' stroke-width='1.6' fill='none' stroke-linecap='round'/></svg>");
+    background-repeat:no-repeat;background-position:right 12px center;padding-right:30px;
+  }
+  .daterow{display:flex;gap:8px;align-items:center;margin:8px 0 14px}
+  .daterow input{
+    flex:1;font-size:15px;padding:9px 12px;border:1px solid var(--line);
     border-radius:10px;background:var(--card);color:var(--ink);font-family:inherit;
   }
   .btn{
@@ -35,14 +45,12 @@
   .btn:active{transform:translateY(1px)}
   .btn.solid{background:var(--olive);color:#fff;border-color:var(--olive)}
   .btn.ghost{background:transparent}
-  .section-label{font-size:12px;letter-spacing:1px;color:var(--muted);font-weight:700;margin:18px 2px 8px;text-transform:none}
-  /* paste whole day */
+  .section-label{font-size:12px;letter-spacing:1px;color:var(--muted);font-weight:700;margin:18px 2px 8px}
   .pastecard{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px}
   .pastecard textarea{width:100%;min-height:118px;resize:vertical;border:1px dashed var(--line);border-radius:10px;background:#FCFAF2;color:var(--ink);font-family:inherit;font-size:15px;line-height:1.7;padding:10px 12px}
   .pastecard textarea::placeholder{color:#B7B197}
   .pastecard textarea:focus{outline:none;border-color:var(--olive)}
   .pastecard .btn.solid{width:100%;margin-top:10px}
-  /* meal card */
   .meal{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 12px 6px;margin-bottom:12px;box-shadow:0 1px 0 rgba(85,96,60,.03)}
   .meal .mhead{display:flex;gap:8px;align-items:center;margin-bottom:8px}
   .meal .mname{flex:1;font-size:16px;font-weight:700;color:var(--olive-deep);border:none;background:transparent;font-family:inherit;padding:2px 0;border-bottom:1.5px dashed var(--line)}
@@ -59,14 +67,12 @@
   .stp input{width:38px;height:30px;border:none;text-align:center;font-size:15px;font-family:inherit;color:var(--ink);background:#fff;-moz-appearance:textfield}
   .stp input::-webkit-outer-spin-button,.stp input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
   .stp input:focus{outline:none;background:#FCFAF2}
-  /* behavior */
   .behcard{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:6px 12px}
   .behrow{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}
   .behrow:last-child{border-bottom:none}
   .behrow .bl{flex:1;font-size:14px}
   .behrow .bl small{color:var(--muted)}
   .behrow input{width:92px;font-size:15px;padding:7px 9px;border:1px solid var(--line);border-radius:9px;text-align:right;font-family:inherit;background:#fff;color:var(--ink)}
-  /* receipt */
   .receipt{position:sticky;bottom:0;margin-top:22px;background:var(--olive-deep);color:#F7F3E7;border-radius:16px 16px 0 0;padding:16px 16px 18px;box-shadow:0 -6px 24px rgba(46,42,34,.14)}
   .receipt h2{font-family:"Songti TC","Noto Serif TC",serif;font-size:15px;margin:0 0 10px;font-weight:700;color:#EDE6CE;display:flex;justify-content:space-between;align-items:center}
   .receipt .rlabel{font-weight:400;font-size:12px;opacity:.75}
@@ -82,15 +88,22 @@
   .ract{display:flex;gap:8px;margin-top:12px}
   .ract .btn{flex:1;background:#F7F3E7;border-color:#F7F3E7;color:var(--olive-deep)}
   .ract .btn.sec{background:transparent;color:#F7F3E7;border-color:rgba(247,243,231,.5)}
-  .toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%) translateY(10px);background:var(--ink);color:#F7F3E7;padding:9px 16px;border-radius:20px;font-size:13px;opacity:0;transition:.25s;pointer-events:none}
+  .toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%) translateY(10px);background:var(--ink);color:#F7F3E7;padding:9px 16px;border-radius:20px;font-size:13px;opacity:0;transition:.25s;pointer-events:none;z-index:20;text-align:center;max-width:88%}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-  details.tset{margin:6px 0 2px}
-  details.tset summary{font-size:13px;color:var(--olive-deep);cursor:pointer;font-weight:600;padding:6px 2px;list-style:none}
+  details.tset{margin:6px 0 2px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:2px 12px}
+  details.tset summary{font-size:14px;color:var(--olive-deep);cursor:pointer;font-weight:700;padding:10px 2px;list-style:none}
   details.tset summary::-webkit-details-marker{display:none}
-  details.tset summary::before{content:"⚙ "}
-  .tgrid{display:grid;grid-template-columns:1fr 1fr;gap:6px 10px;padding:8px 2px}
+  details.tset summary::before{content:"🔧 "}
+  .admin-note{font-size:12px;color:var(--muted);margin:2px 2px 8px;line-height:1.6}
+  .admin-target-title{font-size:12.5px;color:var(--olive-deep);font-weight:700;margin:4px 2px 2px}
+  .tgrid{display:grid;grid-template-columns:1fr 1fr;gap:6px 10px;padding:6px 2px 10px}
   .tgrid label{font-size:13px;display:flex;align-items:center;justify-content:space-between;gap:6px}
-  .tgrid input{width:60px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;text-align:right;font-family:inherit;font-size:14px;background:#fff}
+  .tgrid input{width:64px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;text-align:right;font-family:inherit;font-size:14px;background:#fff}
+  .admin-actions{display:flex;flex-wrap:wrap;gap:6px;margin:4px 2px 8px}
+  .admin-actions .btn{flex:1;min-width:64px;font-size:13px;padding:8px 6px}
+  .codebox{width:100%;min-height:70px;font-size:11px;font-family:ui-monospace,Menlo,Consolas,monospace;border:1px solid var(--line);border-radius:9px;background:#FCFAF2;color:var(--ink);padding:8px;resize:vertical;margin-bottom:6px}
+  .steps{font-size:11.5px;color:var(--muted);line-height:1.7;background:#F4EFE0;border-radius:9px;padding:8px 10px;margin-bottom:8px}
+  .steps b{color:var(--olive-deep)}
   .hint{font-size:11.5px;color:var(--muted);margin:2px 2px 0}
 </style>
 </head>
@@ -100,15 +113,51 @@
     <h1>代換份加總表</h1>
     <span class="sub">BeBetter · 台灣食物代換</span>
   </header>
-  <div class="dayrow">
-    <input id="dayLabel" value="平常日" aria-label="日期或標籤">
-    <button class="btn ghost" id="resetTargets">平常日目標</button>
+
+  <div class="selrow">
+    <div class="field">
+      <label>學員</label>
+      <select id="studentSel" aria-label="選擇學員"></select>
+    </div>
+    <div class="field">
+      <label>天型</label>
+      <select id="daySel" aria-label="選擇天型"></select>
+    </div>
   </div>
-  <details class="tset">
-    <summary>每日目標設定（假日可自行改）</summary>
+  <div class="daterow">
+    <input id="dateLabel" placeholder="日期（可留空，例：7/11）" aria-label="日期">
+    <button class="btn ghost" id="reloadProfile" title="重新載入此學員此天型的目標">↺ 還原目標</button>
+  </div>
+
+  <details class="tset" id="adminBox">
+    <summary>老師後台：學員 / 天型 / 目標管理（學員請略過）</summary>
+    <div class="admin-note">
+      這裡可以新增學員、新增天型、改份量目標。改好後按 <b>產生設定碼並複製</b> → 貼回 GitHub 的 index.html 存檔，就永久生效、學員也看得到。
+      沒貼回 GitHub 的話，改動只存在你這台手機。
+    </div>
+    <div class="admin-actions">
+      <button class="btn ghost" id="addStudent">＋ 學員</button>
+      <button class="btn ghost" id="addDay">＋ 天型</button>
+      <button class="btn ghost" id="delDay">刪天型</button>
+      <button class="btn ghost" id="delStudent">刪學員</button>
+    </div>
+    <div class="admin-target-title" id="adminWho">目前編輯：—</div>
     <div class="tgrid" id="tgrid"></div>
-    <div class="hint">份數目標會顯示在下方收據的括號內，並用來算差距。</div>
+    <div class="admin-actions">
+      <button class="btn solid" id="genCode">產生設定碼並複製</button>
+      <button class="btn ghost" id="copyLink" title="複製本頁網址">複製網址</button>
+    </div>
+    <textarea class="codebox" id="codeOut" readonly placeholder="按上面的「產生設定碼並複製」，這裡會出現一行設定碼"></textarea>
+    <div class="steps">
+      <b>貼回 GitHub 存檔（永久生效）：</b><br>
+      ① 進倉庫點 <b>index.html</b> → 右上鉛筆 ✏️<br>
+      ② 找到這一行：<b>const SAVED_STUDENTS =</b> …（在最上面）<br>
+      ③ 把「整行」換成剛剛複製的設定碼 → <b>Commit changes</b><br>
+      ④ 約 1 分鐘後重新整理網頁即生效
+    </div>
+    <div class="hint">小提醒：改完記得一定要「產生設定碼＋貼回 GitHub」，不然重新整理就會回到舊資料。</div>
   </details>
+
   <div class="section-label">整天貼上（一行一餐，自動拆餐加總）</div>
   <div class="pastecard">
     <textarea id="pasteBox" placeholder="早 1中3🍠1.5🥜&#10;點心 2低1.5🥬1🥜&#10;午 4中3🍠2.5🥬&#10;水果1🍎&#10;晚 3低0.75 🍠2.2🥜"></textarea>
@@ -120,7 +169,7 @@
   <div class="section-label">行為紀錄</div>
   <div class="behcard" id="behcard"></div>
   <div class="receipt">
-    <h2><span id="rTitle">平常日</span><span class="rlabel">目標 ／ 實際</span></h2>
+    <h2><span id="rTitle">紀錄</span><span class="rlabel">目標 ／ 實際</span></h2>
     <div id="receiptLines"></div>
     <div class="ract">
       <button class="btn" id="copyBtn">複製給 LINE</button>
@@ -129,7 +178,32 @@
   </div>
 </div>
 <div class="toast" id="toast">已複製</div>
+
 <script>
+/* ============================================================
+   後台資料：貼上「產生的設定碼」時，替換下面「整行」即可。
+   每位學員底下可有多個天型；睡眠、排便可填範圍（例 6-8、0-2）。
+   ============================================================ */
+const SAVED_STUDENTS = {
+  "凱博": {
+    "重訓":   {dairy:1, veg:4, fruit:1, grain:8, lowfat:7, medfat:5, fat:2, protein:1, water:3200, steps:8000, sleepLabel:"6-8", poopLabel:"0-2"},
+    "平常日": {dairy:1, veg:4, fruit:1, grain:8, lowfat:7, medfat:5, fat:2, protein:1, water:3200, steps:8000, sleepLabel:"6-8", poopLabel:"0-2"}
+  },
+  "詩涵": {
+    "平常日": {dairy:0, veg:4, fruit:1, grain:5, lowfat:6, medfat:3, fat:2, protein:1, water:2500, steps:6000, sleepLabel:"7-8", poopLabel:"1"},
+    "運動日": {dairy:0, veg:4, fruit:2, grain:6, lowfat:6, medfat:3, fat:2, protein:1, water:2800, steps:6000, sleepLabel:"7-8", poopLabel:"1"}
+  },
+  "凱儀": {
+    "減量日": {dairy:0, veg:4, fruit:0, grain:4, lowfat:4, medfat:3, fat:0, protein:1, water:2500, steps:8000, sleepLabel:"7-8", poopLabel:"1"},
+    "重訓日": {dairy:1, veg:4, fruit:2, grain:8, lowfat:7, medfat:5, fat:2, protein:1, water:2500, steps:8000, sleepLabel:"7-8", poopLabel:"1"},
+    "平常日": {dairy:0, veg:4, fruit:2, grain:6, lowfat:7, medfat:4, fat:2, protein:1, water:2500, steps:8000, sleepLabel:"7-8", poopLabel:"1"}
+  },
+  "Vic": {
+    "平常日": {dairy:0, veg:4, fruit:2, grain:6, lowfat:7, medfat:4, fat:2, protein:1, water:2500, steps:8000, sleepLabel:"7-8", poopLabel:"1"}
+  }
+};
+
+/* ---------- 基本設定 ---------- */
 const FOODCATS=[
   {key:'dairy',  emoji:'🥛', name:'乳製品',       full:'乳製品'},
   {key:'veg',    emoji:'🥦', name:'蔬菜類',       full:'蔬菜類'},
@@ -141,21 +215,64 @@ const FOODCATS=[
   {key:'protein',emoji:'🥛', name:'高蛋白',       full:'高蛋白'},
 ];
 const BEH=[
-  {key:'water', emoji:'💧',  name:'水分',  unit:'ml', tkey:'water', suffix:'ml'},
-  {key:'steps', emoji:'🚶‍➡️', name:'走路',  unit:'步', tkey:'steps', suffix:'步'},
-  {key:'sleep', emoji:'💤',  name:'睡眠',  unit:'小時', tkey:'sleep', suffix:'小時'},
-  {key:'poop',  emoji:'✨',  name:'排便',  unit:'次', tkey:'poop', suffix:''},
+  {key:'water', emoji:'💧',  name:'水分', tkey:'water',     type:'num',  suffix:'ml'},
+  {key:'steps', emoji:'🚶‍➡️', name:'走路', tkey:'steps',     type:'num',  suffix:'步'},
+  {key:'sleep', emoji:'💤',  name:'睡眠', tkey:'sleepLabel',type:'text', suffix:'小時'},
+  {key:'poop',  emoji:'✨',  name:'排便', tkey:'poopLabel', type:'text', suffix:'次'},
 ];
-const DEFAULT_TARGETS={dairy:0,veg:4,fruit:2,grain:6,lowfat:7,medfat:4,fat:2,protein:1,
-                       water:2500, steps:8000, sleepLabel:'7-8', poop:1};
-let targets={...DEFAULT_TARGETS};
-let meals=[
-  mkMeal('早'), mkMeal('點心'), mkMeal('午'), mkMeal('傍晚'), mkMeal('運動後')
-];
+function blankTargets(){return {dairy:0,veg:4,fruit:2,grain:6,lowfat:6,medfat:3,fat:2,protein:1,
+                                water:2500, steps:8000, sleepLabel:'7-8', poopLabel:'1'};}
+
+/* 補齊缺漏欄位、深拷貝 */
+function normalize(src){
+  const out={};const def=blankTargets();
+  Object.keys(src).forEach(stu=>{
+    out[stu]={};
+    Object.keys(src[stu]).forEach(day=>{
+      const t={...def};const s=src[stu][day]||{};
+      Object.keys(def).forEach(k=>{if(s[k]!==undefined&&s[k]!==null)t[k]=s[k];});
+      out[stu][day]=t;
+    });
+  });
+  return out;
+}
+let STUDENTS = normalize(SAVED_STUDENTS);
+
+/* ---------- 狀態 ---------- */
+let currentStudent = Object.keys(STUDENTS)[0];
+let currentDay = Object.keys(STUDENTS[currentStudent])[0];
+let targets = {...STUDENTS[currentStudent][currentDay]};
+let meals=[ mkMeal('早'), mkMeal('午'), mkMeal('晚'), mkMeal('點心') ];
 let beh={water:'',steps:'',sleep:'',poop:''};
+
 function mkMeal(name){const v={};FOODCATS.forEach(c=>v[c.key]=0);return{id:Math.random().toString(36).slice(2),name,vals:v};}
-function fmt(n){if(n===''||n==null)return'';const x=Math.round(parseFloat(n)*100)/100;if(isNaN(x))return'';return Number.isInteger(x)?String(x):String(x);}
-/* ---------- shorthand parser: "3低1中2🍠2🥬" ---------- */
+function fmt(n){if(n===''||n==null)return'';const x=Math.round(parseFloat(n)*100)/100;if(isNaN(x))return String(n);return String(x);}
+
+/* ---------- 選單 ---------- */
+const ss=document.getElementById('studentSel');
+const ds=document.getElementById('daySel');
+function fillStudentOptions(){
+  ss.innerHTML=Object.keys(STUDENTS).map(n=>`<option value="${n}">${n}</option>`).join('');
+  ss.value=currentStudent;
+}
+function fillDayOptions(){
+  ds.innerHTML=Object.keys(STUDENTS[currentStudent]).map(d=>`<option value="${d}">${d}</option>`).join('');
+  ds.value=currentDay;
+}
+ss.addEventListener('change',e=>{
+  currentStudent=e.target.value;
+  currentDay=Object.keys(STUDENTS[currentStudent])[0];
+  fillDayOptions();loadProfile();
+});
+ds.addEventListener('change',e=>{currentDay=e.target.value;loadProfile();});
+
+function loadProfile(){
+  targets={...STUDENTS[currentStudent][currentDay]};
+  document.getElementById('adminWho').textContent='目前編輯：'+currentStudent+'　'+currentDay;
+  renderTargets();renderBeh();renderReceipt();
+}
+
+/* ---------- 縮寫解析 ---------- */
 const TOKENMAP={'全穀':'grain','水果':'fruit','堅果':'fat','低':'lowfat','中':'medfat','穀':'grain','蔬':'veg','菜':'veg','果':'fruit','油':'fat','乳':'dairy','高':'protein',
   '🍠':'grain','🥬':'veg','🥦':'veg','🍎':'fruit','🥜':'fat','🍗':'lowfat','🍖':'medfat'};
 function parseShorthand(str){
@@ -163,7 +280,6 @@ function parseShorthand(str){
   let m;while((m=re.exec(str))!==null){const k=TOKENMAP[m[2]];if(k)out[k]=(out[k]||0)+parseFloat(m[1]);}
   return out;
 }
-/* ---------- parse a whole pasted day into meals ---------- */
 function parseDayText(text){
   const lines=text.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
   return lines.map(line=>{
@@ -178,7 +294,8 @@ function parseDayText(text){
     return meal;
   });
 }
-/* ---------- render targets panel ---------- */
+
+/* ---------- 後台：目標編輯 ---------- */
 function renderTargets(){
   const g=document.getElementById('tgrid');g.innerHTML='';
   FOODCATS.forEach(c=>{
@@ -188,12 +305,18 @@ function renderTargets(){
   g.insertAdjacentHTML('beforeend',`<label>💧 水分(ml)<input type="number" data-tkey="water" value="${targets.water}"></label>`);
   g.insertAdjacentHTML('beforeend',`<label>🚶 走路(步)<input type="number" data-tkey="steps" value="${targets.steps}"></label>`);
   g.insertAdjacentHTML('beforeend',`<label>💤 睡眠<input type="text" data-tkey="sleepLabel" value="${targets.sleepLabel}"></label>`);
-  g.insertAdjacentHTML('beforeend',`<label>✨ 排便(次)<input type="number" data-tkey="poop" value="${targets.poop}"></label>`);
+  g.insertAdjacentHTML('beforeend',`<label>✨ 排便<input type="text" data-tkey="poopLabel" value="${targets.poopLabel}"></label>`);
   g.querySelectorAll('input').forEach(inp=>inp.addEventListener('input',e=>{
-    const k=e.target.dataset.tkey;targets[k]=(k==='sleepLabel')?e.target.value:(parseFloat(e.target.value)||0);renderReceipt();
+    const k=e.target.dataset.tkey;
+    const isText=(k==='sleepLabel'||k==='poopLabel');
+    const v=isText?e.target.value:(parseFloat(e.target.value)||0);
+    targets[k]=v;
+    STUDENTS[currentStudent][currentDay][k]=v;
+    renderReceipt();
   }));
 }
-/* ---------- render meals ---------- */
+
+/* ---------- 餐次 ---------- */
 function renderMeals(){
   const box=document.getElementById('meals');box.innerHTML='';
   meals.forEach((meal)=>{
@@ -238,18 +361,21 @@ function bindMealEvents(){
     inp.addEventListener('blur',()=>{if(inp.value.trim())apply();});
   });
 }
-/* ---------- render behavior ---------- */
+
+/* ---------- 行為 ---------- */
+function targetDisplay(b){return b.type==='num'?fmt(targets[b.tkey]):targets[b.tkey];}
 function renderBeh(){
   const box=document.getElementById('behcard');box.innerHTML='';
   BEH.forEach(b=>{
-    const t=b.key==='sleep'?targets.sleepLabel+' 小時':targets[b.tkey]+' '+(b.suffix||'');
+    const t=targetDisplay(b)+' '+(b.suffix||'');
     box.insertAdjacentHTML('beforeend',
       `<div class="behrow"><span class="bl">${b.emoji} ${b.name} <small>(目標 ${t.trim()})</small></span>
         <input type="text" inputmode="decimal" data-beh="${b.key}" value="${beh[b.key]}" placeholder="—"></div>`);
   });
   box.querySelectorAll('input').forEach(inp=>inp.addEventListener('input',e=>{beh[e.target.dataset.beh]=e.target.value;renderReceipt();}));
 }
-/* ---------- totals + receipt ---------- */
+
+/* ---------- 加總 + 收據 ---------- */
 function totals(){const t={};FOODCATS.forEach(c=>t[c.key]=meals.reduce((s,m)=>s+(parseFloat(m.vals[c.key])||0),0));return t;}
 function deltaChip(actual,target){
   const d=Math.round((actual-target)*100)/100;
@@ -257,9 +383,13 @@ function deltaChip(actual,target){
   if(d>0)return`<span class="dl up">+${fmt(d)}</span>`;
   return`<span class="dl dn">−${fmt(Math.abs(d))}</span>`;
 }
+function titleText(){
+  const dt=document.getElementById('dateLabel').value.trim();
+  return currentStudent+' · '+currentDay+(dt?(' · '+dt):'');
+}
 function renderReceipt(){
   const t=totals();const box=document.getElementById('receiptLines');box.innerHTML='';
-  document.getElementById('rTitle').textContent=document.getElementById('dayLabel').value||'紀錄';
+  document.getElementById('rTitle').textContent=titleText();
   FOODCATS.forEach(c=>{
     box.insertAdjacentHTML('beforeend',
       `<div class="rline"><span class="nm">${c.emoji} ${c.full}</span>
@@ -268,26 +398,67 @@ function renderReceipt(){
   });
   box.insertAdjacentHTML('beforeend',`<div class="rsep"></div>`);
   BEH.forEach(b=>{
-    const tg=b.key==='sleep'?targets.sleepLabel+'小時':(fmt(targets[b.tkey])+(b.suffix||''));
+    const tg=targetDisplay(b)+(b.suffix||'');
     const val=beh[b.key]===''?'—':beh[b.key];
     box.insertAdjacentHTML('beforeend',
       `<div class="rline"><span class="nm">${b.emoji} ${b.name}</span>
         <span class="tg">(${tg})</span><span class="ac">${val}</span></div>`);
   });
 }
-/* ---------- copy text (exact LINE format) ---------- */
+
+/* ---------- 複製給 LINE ---------- */
 function buildCopyText(){
   const t=totals();const lines=[];
-  lines.push(document.getElementById('dayLabel').value||'紀錄');
+  lines.push(titleText());
   FOODCATS.forEach(c=>lines.push(`${c.emoji} ${c.full} (${fmt(targets[c.key])}份)：${fmt(t[c.key])||0}`));
-  lines.push(`💧 水分 (${fmt(targets.water)}ml)：${beh.water||''}`);
-  lines.push(`🚶‍➡️ 走路 (${fmt(targets.steps)}步)：${beh.steps||''}`);
-  lines.push(`💤 睡眠 (${targets.sleepLabel}小時)：${beh.sleep||''}`);
-  lines.push(`✨排便: ${beh.poop||''}`);
+  BEH.forEach(b=>lines.push(`${b.emoji} ${b.name} (${targetDisplay(b)}${b.suffix})：${beh[b.key]||''}`));
   return lines.join('\n');
 }
-function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),1400);}
-/* ---------- top controls ---------- */
+function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),1800);}
+async function copyText(txt,okMsg){
+  try{await navigator.clipboard.writeText(txt);toast(okMsg);}
+  catch(e){const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');toast(okMsg);}catch(_){toast('請長按文字手動複製');}document.body.removeChild(ta);}
+}
+
+/* ---------- 後台：管理 ---------- */
+function addStudent(){
+  const name=(prompt('新增學員名稱：')||'').trim();
+  if(!name)return;
+  if(STUDENTS[name]){toast('已有同名學員');return;}
+  STUDENTS[name]={'平常日':blankTargets()};
+  currentStudent=name;currentDay='平常日';
+  fillStudentOptions();fillDayOptions();loadProfile();toast('已新增學員：'+name+'（記得產生設定碼存回）');
+}
+function addDay(){
+  const name=(prompt('在「'+currentStudent+'」新增天型名稱（例：重訓日）：')||'').trim();
+  if(!name)return;
+  if(STUDENTS[currentStudent][name]){toast('此學員已有同名天型');return;}
+  STUDENTS[currentStudent][name]=blankTargets();
+  currentDay=name;
+  fillDayOptions();loadProfile();toast('已新增天型：'+name);
+}
+function delDay(){
+  if(Object.keys(STUDENTS[currentStudent]).length<=1){toast('至少要保留一個天型');return;}
+  if(!confirm('確定刪除「'+currentStudent+' · '+currentDay+'」這個天型？'))return;
+  delete STUDENTS[currentStudent][currentDay];
+  currentDay=Object.keys(STUDENTS[currentStudent])[0];
+  fillDayOptions();loadProfile();toast('已刪除天型');
+}
+function delStudent(){
+  if(Object.keys(STUDENTS).length<=1){toast('至少要保留一位學員');return;}
+  if(!confirm('確定刪除學員「'+currentStudent+'」與其所有天型？'))return;
+  delete STUDENTS[currentStudent];
+  currentStudent=Object.keys(STUDENTS)[0];
+  currentDay=Object.keys(STUDENTS[currentStudent])[0];
+  fillStudentOptions();fillDayOptions();loadProfile();toast('已刪除學員');
+}
+function genCode(){
+  const code='const SAVED_STUDENTS = '+JSON.stringify(STUDENTS)+';';
+  document.getElementById('codeOut').value=code;
+  copyText(code,'設定碼已複製，貼回 GitHub 即永久生效');
+}
+
+/* ---------- 控制項 ---------- */
 document.getElementById('importBtn').addEventListener('click',()=>{
   const txt=document.getElementById('pasteBox').value;
   const parsed=parseDayText(txt);
@@ -295,15 +466,20 @@ document.getElementById('importBtn').addEventListener('click',()=>{
   else{toast('沒抓到內容，檢查格式');}
 });
 document.getElementById('addMeal').addEventListener('click',()=>{meals.push(mkMeal('餐次'));renderMeals();renderReceipt();});
-document.getElementById('dayLabel').addEventListener('input',renderReceipt);
-document.getElementById('resetTargets').addEventListener('click',()=>{targets={...DEFAULT_TARGETS};renderTargets();renderBeh();renderReceipt();toast('已套用平常日目標');});
+document.getElementById('dateLabel').addEventListener('input',renderReceipt);
+document.getElementById('reloadProfile').addEventListener('click',()=>{loadProfile();toast('已還原「'+currentStudent+'·'+currentDay+'」的目標');});
+document.getElementById('addStudent').addEventListener('click',addStudent);
+document.getElementById('addDay').addEventListener('click',addDay);
+document.getElementById('delDay').addEventListener('click',delDay);
+document.getElementById('delStudent').addEventListener('click',delStudent);
+document.getElementById('genCode').addEventListener('click',genCode);
+document.getElementById('copyLink').addEventListener('click',()=>copyText(location.href.split('#')[0],'網址已複製'));
 document.getElementById('clearBtn').addEventListener('click',()=>{meals.forEach(m=>FOODCATS.forEach(c=>m.vals[c.key]=0));beh={water:'',steps:'',sleep:'',poop:''};renderMeals();renderBeh();renderReceipt();});
-document.getElementById('copyBtn').addEventListener('click',async()=>{
-  const txt=buildCopyText();
-  try{await navigator.clipboard.writeText(txt);toast('已複製，可貼到 LINE');}
-  catch(e){const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');toast('已複製');}catch(_){toast('請長按下方文字複製');}document.body.removeChild(ta);}
-});
-/* init */
+document.getElementById('copyBtn').addEventListener('click',()=>copyText(buildCopyText(),'已複製，可貼到 LINE'));
+
+/* ---------- 初始化 ---------- */
+fillStudentOptions();fillDayOptions();
+document.getElementById('adminWho').textContent='目前編輯：'+currentStudent+'　'+currentDay;
 renderTargets();renderMeals();renderBeh();renderReceipt();
 </script>
 </body>
