@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
@@ -160,7 +159,7 @@
 
   <div class="section-label">整天貼上（一行一餐，自動拆餐加總）</div>
   <div class="pastecard">
-    <textarea id="pasteBox" placeholder="早 1中3🍠1.5🥜&#10;點心 2低1.5🥬1🥜&#10;午 4中3🍠2.5🥬&#10;水果1🍎&#10;晚 3低0.75 🍠2.2🥜"></textarea>
+    <textarea id="pasteBox" placeholder="早 1中3🍠1.5🥜1🥛&#10;點心 2低1.5🥬1🥜&#10;午 4中3🍠2.5🥬&#10;水果1🍎&#10;晚 3低0.75 🍠2.2🥜&#10;高蛋白 1高"></textarea>
     <button class="btn solid" id="importBtn">拆餐並加總</button>
   </div>
   <div class="section-label">各餐份數（可再手動微調）</div>
@@ -181,26 +180,37 @@
 
 <script>
 /* ============================================================
-   後台資料：貼上「產生的設定碼」時，替換下面「整行」即可。
+   後台資料：貼上「產生的設定碼」時，替換下面「整段」即可。
    每位學員底下可有多個天型；睡眠、排便可填範圍（例 6-8、0-2）。
    ============================================================ */
 const SAVED_STUDENTS = {
-  "凱博": {
-    "平常日": {dairy:1, veg:4, fruit:1, grain:8, lowfat:7, medfat:5, fat:2, protein:1, water:3200, steps:8000, sleepLabel:"6-8", poopLabel:"0-2"},
-    "重訓日": {dairy:1, veg:4, fruit:1, grain:8, lowfat:7, medfat:5, fat:2, protein:1, water:3200, steps:8000, sleepLabel:"6-8", poopLabel:"0-2"}
+  "昌光":{
+    "平常日":{"dairy":1,"veg":5,"fruit":1,"grain":8,"lowfat":8,"medfat":4,"fat":4,"protein":1,"water":3000,"steps":9000,"sleepLabel":"7-8","poopLabel":"1"},
+    "重訓日":{"dairy":0,"veg":5,"fruit":2,"grain":9,"lowfat":8,"medfat":4,"fat":3,"protein":1,"water":3000,"steps":8000,"sleepLabel":"7-8","poopLabel":"1"},
+    "減量日":{"dairy":0,"veg":5,"fruit":1,"grain":4,"lowfat":5,"medfat":3,"fat":3,"protein":1,"water":3000,"steps":9000,"sleepLabel":"7-8","poopLabel":"1"}
   },
-  "詩涵": {
-    "平常日": {dairy:0, veg:4, fruit:1, grain:5, lowfat:6, medfat:3, fat:2, protein:1, water:2500, steps:6000, sleepLabel:"7-8", poopLabel:"1"},
-    "重訓日": {dairy:0, veg:4, fruit:2, grain:6, lowfat:6, medfat:3, fat:2, protein:1, water:2800, steps:6000, sleepLabel:"7-8", poopLabel:"1"}
+  "宏圖":{
+    "平常日":{"dairy":1,"veg":5,"fruit":2,"grain":9,"lowfat":8,"medfat":4,"fat":2,"protein":1,"water":4000,"steps":8000,"sleepLabel":"7-8","poopLabel":"1"},
+    "重訓日":{"dairy":1,"veg":5,"fruit":2,"grain":12,"lowfat":8,"medfat":4,"fat":2,"protein":1,"water":4000,"steps":8000,"sleepLabel":"7-8","poopLabel":"1"}
   },
-  "凱儀": {
-    "平常日": {dairy:0, veg:4, fruit:2, grain:6, lowfat:7, medfat:4, fat:2, protein:1, water:2500, steps:8000, sleepLabel:"7-8", poopLabel:"1"},
-    "重訓日": {dairy:1, veg:4, fruit:2, grain:8, lowfat:7, medfat:5, fat:2, protein:1, water:2500, steps:8000, sleepLabel:"7-8", poopLabel:"1"},
-    "減量日": {dairy:0, veg:4, fruit:0, grain:4, lowfat:4, medfat:3, fat:0, protein:1, water:2500, steps:8000, sleepLabel:"7-8", poopLabel:"1"}
+  "書菁":{
+    "平常日":{"dairy":0,"veg":4,"fruit":1,"grain":6,"lowfat":5,"medfat":3,"fat":3,"protein":1,"water":2800,"steps":10000,"sleepLabel":"7-8","poopLabel":"1"},
+    "補碳日":{"dairy":1,"veg":4,"fruit":2,"grain":8,"lowfat":5,"medfat":3,"fat":3,"protein":1,"water":2800,"steps":10000,"sleepLabel":"7-8","poopLabel":"1"},
+    "減量日":{"dairy":0,"veg":4,"fruit":1,"grain":4,"lowfat":5,"medfat":3,"fat":0,"protein":1,"water":2800,"steps":10000,"sleepLabel":"7-8","poopLabel":"1"}
   },
-  "Vic": {
-    "平常日": {dairy:0, veg:4, fruit:2, grain:6, lowfat:6, medfat:3, fat:2, protein:1, water:2500, steps:8000, sleepLabel:"7-8", poopLabel:"1"},
-    "重訓日": {dairy:0, veg:4, fruit:2, grain:6, lowfat:6, medfat:3, fat:2, protein:1, water:2500, steps:8000, sleepLabel:"7-8", poopLabel:"1"}
+  "儷方":{
+    "平常日":{"dairy":1,"veg":4,"fruit":2,"grain":5,"lowfat":5,"medfat":3,"fat":2,"protein":1,"water":2500,"steps":10000,"sleepLabel":"7-8","poopLabel":"1-2"},
+    "補碳日":{"dairy":1,"veg":4,"fruit":2,"grain":8,"lowfat":6,"medfat":4,"fat":2,"protein":1,"water":2500,"steps":10000,"sleepLabel":"7-8","poopLabel":"1-2"},
+    "減量日":{"dairy":0,"veg":4,"fruit":1,"grain":4,"lowfat":5,"medfat":3,"fat":2,"protein":1,"water":2500,"steps":10000,"sleepLabel":"7-8","poopLabel":"1-2"}
+  },
+  "Ken":{
+    "平常日":{"dairy":1,"veg":5,"fruit":1,"grain":12,"lowfat":8,"medfat":8,"fat":3,"protein":1,"water":3800,"steps":10000,"sleepLabel":"7-8","poopLabel":"1"},
+    "補碳日":{"dairy":1,"veg":5,"fruit":2,"grain":14,"lowfat":10,"medfat":8,"fat":3,"protein":1,"water":3800,"steps":10000,"sleepLabel":"7-8","poopLabel":"1"},
+    "減量日":{"dairy":1,"veg":5,"fruit":2,"grain":10,"lowfat":10,"medfat":4,"fat":3,"protein":1,"water":3800,"steps":10000,"sleepLabel":"7-8","poopLabel":"1"}
+  },
+  "宇翔":{
+    "平常日":{"dairy":1,"veg":5,"fruit":1,"grain":8,"lowfat":6,"medfat":4,"fat":3,"protein":1,"water":2800,"steps":8000,"sleepLabel":"7-8","poopLabel":"1"},
+    "補碳日":{"dairy":1,"veg":5,"fruit":1,"grain":10,"lowfat":6,"medfat":4,"fat":3,"protein":1,"water":2800,"steps":8000,"sleepLabel":"7-8","poopLabel":"1"}
   }
 };
 
@@ -274,10 +284,11 @@ function loadProfile(){
 }
 
 /* ---------- 縮寫解析 ---------- */
+/* 🥛 ＝ 乳製品；高蛋白請寫「高」或「高蛋白」 */
 const TOKENMAP={'全穀':'grain','水果':'fruit','堅果':'fat','低':'lowfat','中':'medfat','穀':'grain','蔬':'veg','菜':'veg','果':'fruit','油':'fat','乳':'dairy','高':'protein',
-  '🍠':'grain','🥬':'veg','🥦':'veg','🍎':'fruit','🥜':'fat','🍗':'lowfat','🍖':'medfat'};
+  '🍠':'grain','🥬':'veg','🥦':'veg','🍎':'fruit','🥜':'fat','🍗':'lowfat','🍖':'medfat','🥛':'dairy'};
 function parseShorthand(str){
-  const out={};const re=/(\d+(?:\.\d+)?)\s*(全穀|水果|堅果|低|中|穀|蔬|菜|果|油|乳|高|🍠|🥬|🥦|🍎|🥜|🍗|🍖)/g;
+  const out={};const re=/(\d+(?:\.\d+)?)\s*(全穀|水果|堅果|低|中|穀|蔬|菜|果|油|乳|高|🍠|🥬|🥦|🍎|🥜|🍗|🍖|🥛)/g;
   let m;while((m=re.exec(str))!==null){const k=TOKENMAP[m[2]];if(k)out[k]=(out[k]||0)+parseFloat(m[1]);}
   return out;
 }
@@ -334,7 +345,7 @@ function renderMeals(){
           <input class="mname" data-m="${meal.id}" value="${meal.name}" aria-label="餐次名稱">
           <button class="del" data-del="${meal.id}" title="刪除">✕</button>
         </div>
-        <input class="quick" data-quick="${meal.id}" placeholder="快速輸入：3低1中2🍠2🥬 → Enter 帶入">
+        <input class="quick" data-quick="${meal.id}" placeholder="快速輸入：3低1中2🍠2🥬1🥛 → Enter 帶入">
         <div class="grid">${cells}</div>
       </div>`);
   });
@@ -407,10 +418,11 @@ function renderReceipt(){
   });
 }
 
-/* ---------- 複製給 LINE ---------- */
+/* ---------- 複製給 LINE（不含學員名字與天型；有填日期才放日期） ---------- */
 function buildCopyText(){
   const t=totals();const lines=[];
-  lines.push(titleText());
+  const dt=document.getElementById('dateLabel').value.trim();
+  if(dt)lines.push(dt);
   FOODCATS.forEach(c=>lines.push(`${c.emoji} ${c.full} (${fmt(targets[c.key])}份)：${fmt(t[c.key])||0}`));
   BEH.forEach(b=>lines.push(`${b.emoji} ${b.name} (${targetDisplay(b)}${b.suffix})：${beh[b.key]||''}`));
   return lines.join('\n');
